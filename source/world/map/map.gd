@@ -5,4 +5,4 @@ func _ready() -> void:
 	_on_reality_changed(RealityManager.is_light_reality)
 
 func _on_reality_changed(is_light: bool) -> void:
-	$LightTileMap.enabled = is_light; $DarkTileMap.enabled = not is_light
+	$LightTileMap.visible = is_light; $DarkTileMap.visible = not is_light
