@@ -9,7 +9,7 @@ var _backup_position := Vector2.ZERO
 
 func _ready() -> void:
 	RealityManager.reality_changed.connect(_on_reality_changed)
-	_on_reality_changed(RealityManager.is_light_reality)
+	_on_reality_changed()
 
 func _physics_process(delta: float) -> void:
 	var movement := Input.get_axis(&"move_left", &"move_right")
@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-func _on_reality_changed(_is_light: bool) -> void:
+func _on_reality_changed() -> void:
 	# Retuns to the backup position in case it collides with the world when changing reality.
 	# Otherwise it just saves a new backup position.
 	if _hitbox.has_overlapping_bodies():
