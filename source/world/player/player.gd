@@ -1,15 +1,15 @@
 class_name Player extends CharacterBody2D
 
-@onready var _hitbox: Area2D = $Hitbox
+signal back_to_backup_position(from: Vector2, to: Vector2)
+
+@onready var hitbox: Area2D = $Hitbox
 
 const SPEED := 100.0
 const JUMP_FORCE := 300.0
-
-var _backup_position := Vector2.ZERO
+var backup_position := Vector2.ZERO
 
 func _ready() -> void:
-	RealityManager.reality_changed.connect(_on_reality_changed)
-	_on_reality_changed()
+	Global.player = self
 
 func _physics_process(delta: float) -> void:
 	var movement := Input.get_axis(&"move_left", &"move_right")
@@ -24,13 +24,9 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-func _on_reality_changed() -> void:
-	# Retuns to the backup position in case it collides with the world when changing reality.
-	# Otherwise it just saves a new backup position.
-	if _hitbox.has_overlapping_bodies():
-		global_position = _backup_position
-	else:
-		_backup_position = global_position
+func save_backup_position() -> void:
+	backup_position = global_position
 
-	RealityManager.update_collision_mask(self)
-	RealityManager.update_collision_mask(_hitbox, true)
+func return_to_backup_position() -> void:
+	back_to_backup_position.emit(global_position, backup_position)
+	global_position = backup_position

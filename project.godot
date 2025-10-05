@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 RealityManager="*res://source/systems/reality_manager.gd"
+Global="*res://source/global.gd"
 
 [display]
 
