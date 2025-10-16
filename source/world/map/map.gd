@@ -1,5 +1,6 @@
 extends Node2D
 
+@onready var _background_color: ColorRect = $Background/BackgroundColor
 @onready var _light_tile_map: TileMapLayer = $LightTileMap
 @onready var _dark_tile_map: TileMapLayer = $DarkTileMap
 
@@ -7,6 +8,13 @@ func _ready() -> void:
 	Global.player_initialized.connect(_on_player_initialized)
 	RealityManager.reality_changed.connect(_on_reality_changed)
 	_on_reality_changed()
+
+func _process(_delta: float) -> void:
+	var texture := RealityManager.reality_mask_texture
+
+	_background_color.material.set_shader_parameter(&"reality_mask_texture", texture)
+	_light_tile_map.material.set_shader_parameter(&"reality_mask_texture", texture)
+	_dark_tile_map.material.set_shader_parameter(&"reality_mask_texture", texture)
 
 func _update_player_state() -> void:
 	if not is_instance_valid(Global.player): return
@@ -30,9 +38,3 @@ func _on_player_initialized() -> void:
 
 func _on_reality_changed() -> void:
 	_update_player_state()
-
-	var is_light := RealityManager.is_light_reality
-
-	# Change map appearance.
-	RenderingServer.set_default_clear_color(Color(&"cccccc") if is_light else Color(&"050505")) 
-	_light_tile_map.visible = is_light; _dark_tile_map.visible = not is_light
