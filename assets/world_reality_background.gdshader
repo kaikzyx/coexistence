@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform sampler2D reality_mask_texture : filter_nearest;
+global uniform sampler2D reality_mask_texture : filter_nearest;
 uniform vec3 light_background_color : source_color = vec3(1.0);
 uniform vec3 dark_background_color : source_color = vec3(0.0);
 

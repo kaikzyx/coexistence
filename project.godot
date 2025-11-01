@@ -63,3 +63,10 @@ change_reality={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[shader_globals]
+
+reality_mask_texture={
+"type": "sampler2D",
+"value": ""
+}

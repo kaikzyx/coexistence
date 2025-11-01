@@ -7,6 +7,10 @@ var is_light_reality := true:
 	set(value): is_light_reality = value; reality_changed.emit()
 var reality_mask_texture: ViewportTexture = null
 
+func _process(_delta: float) -> void:
+	if reality_mask_texture:
+		RenderingServer.global_shader_parameter_set(&"reality_mask_texture", reality_mask_texture)
+
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"change_reality"):
 		is_light_reality = not is_light_reality

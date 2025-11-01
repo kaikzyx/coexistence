@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://diubhkm5dmin1"]
+
+[ext_resource type="Shader" uid="uid://qj5f5auo7u1s" path="res://assets/world_reality_visibility.gdshader" id="1_crbn1"]
+
+[resource]
+shader = ExtResource("1_crbn1")
+shader_parameter/show_on_light_reality = false
