@@ -40,7 +40,8 @@ func _calculate_mask_position() -> Vector2:
 		return Global.player.global_position
 
 	# Calculate screen-relative position considering camera zoom and offset.
-	return (Global.player.global_position - camera.global_position) * camera.zoom + half_viewport
+	var distance := Global.player.global_position - (camera.global_position + camera.offset)
+	return distance * camera.zoom + half_viewport
 
 func _calculate_mask_scale(mask: Sprite2D) -> Vector2:
 	var position := mask.global_position
