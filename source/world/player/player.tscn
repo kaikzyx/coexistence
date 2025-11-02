@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://fqfwt8v8qn21"]
+[gd_scene load_steps=7 format=3 uid="uid://fqfwt8v8qn21"]
 
 [ext_resource type="Script" uid="uid://tt0bdvipel44" path="res://source/world/player/player.gd" id="1_ev4wd"]
 [ext_resource type="Texture2D" uid="uid://bdcrhgxq05ju2" path="res://assets/player.png" id="1_ogqyn"]
+[ext_resource type="Material" uid="uid://c1lhoktblto3l" path="res://assets/world_reality_light_visibility.tres" id="2_dqp5x"]
+[ext_resource type="Material" uid="uid://diubhkm5dmin1" path="res://assets/world_reality_dark_visibility.tres" id="4_bnj2r"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ibvgw"]
 radius = 7.0
@@ -20,9 +22,18 @@ script = ExtResource("1_ev4wd")
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_ibvgw")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="LightSprite" type="Sprite2D" parent="."]
 texture_filter = 1
+material = ExtResource("2_dqp5x")
 texture = ExtResource("1_ogqyn")
+hframes = 2
+
+[node name="DarkSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+material = ExtResource("4_bnj2r")
+texture = ExtResource("1_ogqyn")
+hframes = 2
+frame = 1
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 0

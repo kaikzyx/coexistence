@@ -11,10 +11,10 @@ zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = 0
 limit_right = 320
-limit_bottom = 360
+limit_bottom = 180
 script = ExtResource("3_ibvgw")
 
 [node name="Map" parent="." instance=ExtResource("2_ibvgw")]
 
 [node name="Player" parent="." instance=ExtResource("2_hv7nm")]
-position = Vector2(80, 304)
+position = Vector2(80, 144)
