@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://fqfwt8v8qn21"]
+[gd_scene load_steps=9 format=3 uid="uid://fqfwt8v8qn21"]
 
 [ext_resource type="Script" uid="uid://tt0bdvipel44" path="res://source/world/player/player.gd" id="1_ev4wd"]
 [ext_resource type="Texture2D" uid="uid://bdcrhgxq05ju2" path="res://assets/player.png" id="1_ogqyn"]
 [ext_resource type="Material" uid="uid://c1lhoktblto3l" path="res://assets/world_reality_light_visibility.tres" id="2_dqp5x"]
 [ext_resource type="Material" uid="uid://diubhkm5dmin1" path="res://assets/world_reality_dark_visibility.tres" id="4_bnj2r"]
+[ext_resource type="Script" uid="uid://2ok7gfa6l2jh" path="res://source/systems/state_machine/state_machine.gd" id="5_obiwn"]
+[ext_resource type="Script" uid="uid://cql5ubkj1mms0" path="res://source/systems/state_machine/state.gd" id="6_65lwy"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ibvgw"]
 radius = 7.0
@@ -42,3 +44,31 @@ collision_layer = 0
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_ev4wd")
 debug_color = Color(0.7, 0, 0.0116665, 0.419608)
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_obiwn")
+initial_state = NodePath("IdleState")
+metadata/_custom_type_script = "uid://2ok7gfa6l2jh"
+
+[node name="IdleState" type="Node" parent="StateMachine"]
+script = ExtResource("6_65lwy")
+metadata/_custom_type_script = "uid://cql5ubkj1mms0"
+
+[node name="WalkState" type="Node" parent="StateMachine"]
+script = ExtResource("6_65lwy")
+metadata/_custom_type_script = "uid://cql5ubkj1mms0"
+
+[node name="JumpState" type="Node" parent="StateMachine"]
+script = ExtResource("6_65lwy")
+metadata/_custom_type_script = "uid://cql5ubkj1mms0"
+
+[node name="FallState" type="Node" parent="StateMachine"]
+script = ExtResource("6_65lwy")
+metadata/_custom_type_script = "uid://cql5ubkj1mms0"
+
+[connection signal="state_changed" from="StateMachine" to="." method="_on_state_machine_state_changed"]
+[connection signal="physics_processed" from="StateMachine/IdleState" to="." method="_on_idle_state_physics_processed"]
+[connection signal="physics_processed" from="StateMachine/WalkState" to="." method="_on_walk_state_physics_processed"]
+[connection signal="entered" from="StateMachine/JumpState" to="." method="_on_jump_state_entered"]
+[connection signal="physics_processed" from="StateMachine/JumpState" to="." method="_on_jump_state_physics_processed"]
+[connection signal="physics_processed" from="StateMachine/FallState" to="." method="_on_fall_state_physics_processed"]
