@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 RealityManager="*res://source/systems/reality_manager.gd"
 Global="*res://source/global.gd"
+BetterTerrain="*res://addons/better-terrain/BetterTerrain.gd"
 
 [display]
 
@@ -29,6 +30,10 @@ window/stretch/mode="canvas_items"
 [dotnet]
 
 project/assembly_name="Coexistence"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/better-terrain/plugin.cfg")
 
 [input]
 
