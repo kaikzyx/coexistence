@@ -5,3 +5,4 @@
 [resource]
 shader = ExtResource("1_vprgc")
 shader_parameter/show_on_light_reality = true
+shader_parameter/is_canvas_group = false

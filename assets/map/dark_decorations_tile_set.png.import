@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://62peyopkofca"
-path="res://.godot/imported/dark_tile_set.png-92597fb7dfe9fb8522834020815aeec6.ctex"
+uid="uid://ddv6b1n24fqho"
+path="res://.godot/imported/dark_decorations_tile_set.png-3053d888fd49ed9c8c57805b1eb3022c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/map/dark_tile_set.png"
-dest_files=["res://.godot/imported/dark_tile_set.png-92597fb7dfe9fb8522834020815aeec6.ctex"]
+source_file="res://assets/map/dark_decorations_tile_set.png"
+dest_files=["res://.godot/imported/dark_decorations_tile_set.png-3053d888fd49ed9c8c57805b1eb3022c.ctex"]
 
 [params]
 

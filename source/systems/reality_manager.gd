@@ -3,7 +3,7 @@ extends Node
 
 signal reality_changed()
 
-var is_light_reality := true:
+var is_light_reality := false:
 	set(value): is_light_reality = value; reality_changed.emit()
 var reality_mask_texture: ViewportTexture = null
 

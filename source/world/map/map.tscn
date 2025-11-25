@@ -1,33 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://jccr45es71wj"]
+[gd_scene load_steps=7 format=3 uid="uid://jccr45es71wj"]
 
 [ext_resource type="Script" uid="uid://dgnwnrwcniiok" path="res://source/world/map/map.gd" id="1_rqrk8"]
-[ext_resource type="Shader" uid="uid://1r5j37pkdfyu" path="res://assets/world_reality_background.gdshader" id="2_i8alk"]
-[ext_resource type="Material" uid="uid://c1lhoktblto3l" path="res://assets/world_reality_light_visibility.tres" id="3_i8alk"]
-[ext_resource type="PackedScene" uid="uid://cfwgidasxjlmx" path="res://source/world/map/light_tile_map.tscn" id="3_m3xcw"]
-[ext_resource type="PackedScene" uid="uid://eui2pkrl4du8" path="res://source/world/map/dark_tile_map.tscn" id="4_i8alk"]
-[ext_resource type="Material" uid="uid://diubhkm5dmin1" path="res://assets/world_reality_dark_visibility.tres" id="5_qrr0t"]
+[ext_resource type="PackedScene" uid="uid://cfwgidasxjlmx" path="res://source/world/map/light_map.tscn" id="3_m3xcw"]
+[ext_resource type="PackedScene" uid="uid://eui2pkrl4du8" path="res://source/world/map/dark_map.tscn" id="4_i8alk"]
+[ext_resource type="Material" uid="uid://b3t4j356vvvjo" path="res://assets/world_reality_light_visibility_canvas_group.tres" id="4_qrr0t"]
+[ext_resource type="Material" uid="uid://bpe5tvnnqdna6" path="res://assets/world_reality_dark_visibility_canvas_group.tres" id="6_441rv"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qrr0t"]
-shader = ExtResource("2_i8alk")
-shader_parameter/light_background_color = Color(0.92941177, 0.92941177, 0.92941177, 1)
-shader_parameter/dark_background_color = Color(0.06666667, 0.06666667, 0.06666667, 1)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qrr0t"]
+size = Vector2(16, 176)
 
 [node name="Map" type="Node2D"]
 script = ExtResource("1_rqrk8")
 
-[node name="Background" type="CanvasLayer" parent="."]
-layer = -1
+[node name="LightMap" parent="." instance=ExtResource("3_m3xcw")]
+material = ExtResource("4_qrr0t")
 
-[node name="BackgroundColor" type="ColorRect" parent="Background"]
-material = SubResource("ShaderMaterial_qrr0t")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="DarkMap" parent="." instance=ExtResource("4_i8alk")]
+material = ExtResource("6_441rv")
 
-[node name="LightTileMap" parent="." instance=ExtResource("3_m3xcw")]
-material = ExtResource("3_i8alk")
+[node name="LeftWorldBoundary" type="StaticBody2D" parent="."]
+collision_layer = 3
+collision_mask = 0
 
-[node name="DarkTileMap" parent="." instance=ExtResource("4_i8alk")]
-material = ExtResource("5_qrr0t")
+[node name="Collision" type="CollisionShape2D" parent="LeftWorldBoundary"]
+position = Vector2(-8, 88)
+shape = SubResource("RectangleShape2D_qrr0t")

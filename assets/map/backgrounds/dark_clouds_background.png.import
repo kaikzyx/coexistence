@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://62peyopkofca"
-path="res://.godot/imported/dark_tile_set.png-92597fb7dfe9fb8522834020815aeec6.ctex"
+uid="uid://cnmmq1dcxa2hh"
+path="res://.godot/imported/dark_clouds_background.png-c798a2394f3c52a7d4e11b109aa0f847.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/map/dark_tile_set.png"
-dest_files=["res://.godot/imported/dark_tile_set.png-92597fb7dfe9fb8522834020815aeec6.ctex"]
+source_file="res://assets/map/backgrounds/dark_clouds_background.png"
+dest_files=["res://.godot/imported/dark_clouds_background.png-c798a2394f3c52a7d4e11b109aa0f847.ctex"]
 
 [params]
 
