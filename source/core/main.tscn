@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b3vja38on8rht"]
 
 [ext_resource type="PackedScene" uid="uid://dd6mx64boab6c" path="res://source/world/world.tscn" id="1_kaxhg"]
-[ext_resource type="PackedScene" uid="uid://dfpk3vwpighqj" path="res://source/core/reality_mask_canvas.tscn" id="4_gmyo2"]
+[ext_resource type="PackedScene" uid="uid://dfpk3vwpighqj" path="res://source/systems/reality/reality_viewer.tscn" id="4_gmyo2"]
 
 [node name="Main" type="Node"]
 
@@ -26,4 +26,4 @@ render_target_update_mode = 4
 
 [node name="World" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_kaxhg")]
 
-[node name="RealityMaskCanvas" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_gmyo2")]
+[node name="RealityViewer" parent="SubViewportContainer/SubViewport" instance=ExtResource("4_gmyo2")]

@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dfpk3vwpighqj"]
-
-[ext_resource type="Script" uid="uid://cw4vvmagkyntn" path="res://source/core/reality_mask_canvas.gd" id="1_071ue"]
-
-[node name="RealityMaskCanvas" type="Node"]
-script = ExtResource("1_071ue")
-
-[node name="SubViewport" type="SubViewport" parent="."]

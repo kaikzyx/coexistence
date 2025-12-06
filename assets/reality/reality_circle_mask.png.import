@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdcrhgxq05ju2"
-path="res://.godot/imported/player.png-be2216fcaabb5c62aa2466cd9a5726a8.ctex"
+uid="uid://bmormtyopsit"
+path="res://.godot/imported/reality_circle_mask.png-963768cf2d59205f459abea84e6014c9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/player.png"
-dest_files=["res://.godot/imported/player.png-be2216fcaabb5c62aa2466cd9a5726a8.ctex"]
+source_file="res://assets/reality/reality_circle_mask.png"
+dest_files=["res://.godot/imported/reality_circle_mask.png-963768cf2d59205f459abea84e6014c9.ctex"]
 
 [params]
 

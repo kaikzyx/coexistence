@@ -1,27 +1,27 @@
 class_name Player extends CharacterBody2D
 
-signal back_to_backup_position(from: Vector2, to: Vector2)
+static var light_texture: Texture2D = preload("res://assets/player/light_player.png")
+static var dark_texture: Texture2D = preload("res://assets/player/dark_player.png")
 
-@onready var state_machine: StateMachine = $StateMachine
-@onready var hitbox: Area2D = $Hitbox
+signal back_to_backup_position(from: Vector2, to: Vector2)
 
 const SPEED := 100.0
 const JUMP_FORCE := 300.0
+
 var backup_position := Vector2.ZERO
 
+@onready var state_machine: StateMachine = $StateMachine
+@onready var hitbox: Area2D = $Hitbox
+@onready var sprite: Sprite2D = $Sprite
+
 func _ready() -> void:
+	RealityManager.reality_changed.connect(_on_reality_changed); _on_reality_changed()
+
 	Global.player = self
 	state_machine.start()
 
 func _physics_process(_delta: float) -> void:
 	move_and_slide()
-
-func save_backup_position() -> void:
-	backup_position = global_position
-
-func return_to_backup_position() -> void:
-	back_to_backup_position.emit(global_position, backup_position)
-	global_position = backup_position
 
 func _get_movement_input() -> int:
 	return Input.get_axis(&"move_left", &"move_right") as int
@@ -39,12 +39,32 @@ func _movement_system(delta: float) -> void:
 	var movement := _get_movement_input()
 	velocity.x = lerp(velocity.x, movement * SPEED, 10.0 * delta)
 
-	if movement != 0:
-		$LightSprite.flip_h = movement == -1
-		$DarkSprite.flip_h = movement == -1
+	if movement != 0: sprite.flip_h = movement == -1
 
 	if not is_on_floor():
 		velocity.y += ProjectSettings.get_setting(&"physics/2d/default_gravity") as float * delta
+
+func _on_reality_changed() -> void:
+	var query := PhysicsShapeQueryParameters2D.new()
+	var collision: CollisionShape2D = $Hitbox/Collision
+	
+	query.transform = collision.global_transform
+	query.shape = collision.shape
+	query.collision_mask = hitbox.collision_mask
+
+	var result := get_viewport().world_2d.direct_space_state.intersect_shape(query, 1)
+
+	# Retuns to the backup position in case it collides with the world when changing reality.
+	# Otherwise it just saves a new backup position.
+	if result.is_empty():
+		backup_position = global_position
+	else:
+		# It is important that the signal is emitted beforehand to avoid bugs.
+		back_to_backup_position.emit(global_position, backup_position)
+		global_position = backup_position
+		velocity = Vector2.ZERO
+
+	sprite.texture = light_texture if RealityManager.is_light_reality else dark_texture
 
 #region State Machine
 

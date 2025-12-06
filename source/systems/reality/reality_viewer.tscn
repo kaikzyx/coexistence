@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://dfpk3vwpighqj"]
+
+[ext_resource type="Script" uid="uid://cw4vvmagkyntn" path="res://source/systems/reality/reality_viewer.gd" id="1_071ue"]
+[ext_resource type="Shader" uid="uid://b7ia5bdp2x0hc" path="res://assets/reality/reality_viewer.gdshader" id="2_qqhjc"]
+[ext_resource type="Texture2D" uid="uid://bmormtyopsit" path="res://assets/reality/reality_circle_mask.png" id="2_ru4cy"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qqhjc"]
+shader = ExtResource("2_qqhjc")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_qqhjc"]
+viewport_path = NodePath("RealityMask")
+
+[node name="RealityViewer" type="CanvasLayer"]
+script = ExtResource("1_071ue")
+
+[node name="RealityMask" type="SubViewport" parent="."]
+
+[node name="BackgroundMask" type="ColorRect" parent="RealityMask"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="SpriteMask" type="Sprite2D" parent="RealityMask"]
+texture_filter = 1
+texture = ExtResource("2_ru4cy")
+
+[node name="RealityViewerTexture" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_qqhjc")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_qqhjc")

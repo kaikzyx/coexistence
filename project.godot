@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-RealityManager="*res://source/systems/reality_manager.gd"
+RealityManager="*res://source/systems/reality/reality_manager.gd"
 Global="*res://source/global.gd"
 BetterTerrain="*res://addons/better-terrain/BetterTerrain.gd"
 
@@ -60,9 +60,8 @@ change_reality={
 
 [layer_names]
 
-2d_physics/layer_1="light_map"
-2d_physics/layer_2="dark_map"
-2d_physics/layer_3="player"
+2d_physics/layer_1="player"
+2d_physics/layer_2="map"
 
 [rendering]
 
@@ -71,7 +70,11 @@ renderer/rendering_method.mobile="gl_compatibility"
 
 [shader_globals]
 
-reality_mask_texture={
+light_viewport_texture={
+"type": "sampler2D",
+"value": ""
+}
+dark_viewport_texture={
 "type": "sampler2D",
 "value": ""
 }
