@@ -30,7 +30,7 @@ func _is_moving() -> bool:
 	return _get_movement_input() != 0
 
 func _is_falling() -> bool:
-	return velocity.y > 200
+	return velocity.y > 0
 
 func _can_jump() -> bool:
 	return Input.is_action_just_pressed(&"jump")
