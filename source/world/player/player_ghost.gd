@@ -2,18 +2,41 @@ class_name PlayerGhost extends Node2D
 
 var following := true
 
-@onready var _sprite: Sprite2D = $Sprite
+@onready var _animated_sprite: AnimatedSprite2D = $AnimatedSprite
 
 func _ready() -> void:
-	_update()
+	Global.player_initialized.connect(_on_player_initialized); _on_player_initialized()
+	_update_global_transform()
 
 func _process(_delta: float) -> void:
-	_update()
+	_update_global_transform()
 
-func _update() -> void:
+func _update_global_transform() -> void:
+	if following and is_instance_valid(Global.player):
+		_animated_sprite.global_transform = Global.player.animated_sprite.global_transform
+
+func _on_player_initialized() -> void:
 	if not is_instance_valid(Global.player): return
-	var player_sprite := Global.player.sprite
+	var player := Global.player
 
-	if following: _sprite.global_transform = player_sprite.global_transform
-	_sprite.texture = Player.dark_texture if RealityManager.is_light_reality else Player.light_texture
-	_sprite.flip_h = player_sprite.flip_h
+	player.direction_changed.connect(_on_player_direction_changed)
+	player.animated_sprite.sprite_frames_changed.connect(_on_player_sprite_frames_changed)
+	player.animated_sprite.animation_changed.connect(_on_player_animation_changed)
+	player.animated_sprite.frame_changed.connect(_on_player_frame_changed)
+
+	_on_player_direction_changed()
+	_on_player_sprite_frames_changed()
+	_on_player_animation_changed()
+	_on_player_frame_changed()
+
+func _on_player_direction_changed() -> void:
+	_animated_sprite.flip_h = Global.player.direction == -1
+
+func _on_player_sprite_frames_changed() -> void:
+	_animated_sprite.sprite_frames = Player.get_sprite_frames(not RealityManager.is_light_reality)
+
+func _on_player_animation_changed() -> void:
+	_animated_sprite.animation = Global.player.animated_sprite.animation
+
+func _on_player_frame_changed() -> void:
+	_animated_sprite.frame = Global.player.animated_sprite.frame

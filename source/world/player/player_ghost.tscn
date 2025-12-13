@@ -5,4 +5,4 @@
 [node name="PlayerGhost" type="Node2D"]
 script = ExtResource("1_nqibf")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="."]

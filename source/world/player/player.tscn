@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://fqfwt8v8qn21"]
 
 [ext_resource type="Script" uid="uid://tt0bdvipel44" path="res://source/world/player/player.gd" id="1_ev4wd"]
-[ext_resource type="Texture2D" uid="uid://c7v0cp8rsyf3a" path="res://assets/player/light_player.png" id="2_bnj2r"]
+[ext_resource type="SpriteFrames" uid="uid://cnrxm5weu7x" path="res://assets/player/light_player_animation.tres" id="2_bnj2r"]
 [ext_resource type="Script" uid="uid://2ok7gfa6l2jh" path="res://source/systems/state_machine/state_machine.gd" id="5_obiwn"]
 [ext_resource type="Script" uid="uid://cql5ubkj1mms0" path="res://source/systems/state_machine/state.gd" id="6_65lwy"]
 
@@ -17,11 +17,6 @@ height = 27.5
 collision_mask = 2
 script = ExtResource("1_ev4wd")
 
-[node name="Sprite" type="Sprite2D" parent="."]
-texture_filter = 1
-position = Vector2(0, -16)
-texture = ExtResource("2_bnj2r")
-
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -14)
 shape = SubResource("CapsuleShape2D_ibvgw")
@@ -35,6 +30,12 @@ position = Vector2(0, -14)
 shape = SubResource("CapsuleShape2D_ev4wd")
 debug_color = Color(0.7, 0, 0.0116665, 0.419608)
 
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -16)
+sprite_frames = ExtResource("2_bnj2r")
+animation = &"idle"
+
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("5_obiwn")
 initial_state = NodePath("IdleState")
@@ -44,7 +45,7 @@ metadata/_custom_type_script = "uid://2ok7gfa6l2jh"
 script = ExtResource("6_65lwy")
 metadata/_custom_type_script = "uid://cql5ubkj1mms0"
 
-[node name="WalkState" type="Node" parent="StateMachine"]
+[node name="RunState" type="Node" parent="StateMachine"]
 script = ExtResource("6_65lwy")
 metadata/_custom_type_script = "uid://cql5ubkj1mms0"
 
@@ -57,8 +58,11 @@ script = ExtResource("6_65lwy")
 metadata/_custom_type_script = "uid://cql5ubkj1mms0"
 
 [connection signal="state_changed" from="StateMachine" to="." method="_on_state_machine_state_changed"]
+[connection signal="entered" from="StateMachine/IdleState" to="." method="_on_idle_state_entered"]
 [connection signal="physics_processed" from="StateMachine/IdleState" to="." method="_on_idle_state_physics_processed"]
-[connection signal="physics_processed" from="StateMachine/WalkState" to="." method="_on_walk_state_physics_processed"]
+[connection signal="entered" from="StateMachine/RunState" to="." method="_on_run_state_entered"]
+[connection signal="physics_processed" from="StateMachine/RunState" to="." method="_on_run_state_physics_processed"]
 [connection signal="entered" from="StateMachine/JumpState" to="." method="_on_jump_state_entered"]
 [connection signal="physics_processed" from="StateMachine/JumpState" to="." method="_on_jump_state_physics_processed"]
+[connection signal="entered" from="StateMachine/FallState" to="." method="_on_fall_state_entered"]
 [connection signal="physics_processed" from="StateMachine/FallState" to="." method="_on_fall_state_physics_processed"]

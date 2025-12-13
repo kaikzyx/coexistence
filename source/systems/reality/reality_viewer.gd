@@ -25,10 +25,10 @@ func _calculate_mask_position() -> Vector2:
 
 	# Use player's absolute position if no camera is available.
 	if not is_instance_valid(camera):
-		return Global.player.sprite.global_position
+		return Global.player.animated_sprite.global_position
 
 	# Calculate screen-relative position considering camera zoom and offset.
-	var distance := Global.player.sprite.global_position - (camera.global_position + camera.offset)
+	var distance := Global.player.animated_sprite.global_position - (camera.global_position + camera.offset)
 	return distance * camera.zoom + half_viewport
 
 func _calculate_mask_scale() -> Vector2:
