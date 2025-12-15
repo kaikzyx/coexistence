@@ -1,5 +1,7 @@
 @tool extends Node2D
 
+const _SHADER_PERIOD := 100000.0
+
 @onready var _base: ColorRect = $ShaderParallax/Base
 @onready var _pixel_art_parallax: Parallax2D = $PixelArtParallax
 @onready var _animated_sprite: AnimatedSprite2D = $PixelArtParallax/AnimatedSprite
@@ -34,7 +36,8 @@ func _physics_process(delta: float) -> void:
 	var camera := get_viewport().get_camera_2d()
 
 	if is_instance_valid(camera):
-		var c = camera.global_position
+		var offset = camera.global_position
 		if _reality == Reality.LIGHT:
-			c += Time.get_ticks_usec() * _AUTO_SCROLL_FACTOR * Vector2.DOWN * delta
-		_base.material.set_shader_parameter(&"offset", c)
+			offset += Time.get_ticks_usec() * _AUTO_SCROLL_FACTOR * Vector2.DOWN * delta
+		offset = Vector2(fmod(offset.x, _SHADER_PERIOD), fmod(offset.y, _SHADER_PERIOD))
+		_base.material.set_shader_parameter(&"offset", offset)
