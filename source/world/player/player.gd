@@ -9,6 +9,19 @@ signal direction_changed()
 
 const SPEED := 100.0
 const JUMP_FORCE := 300.0
+const MAX_GRAVITY := 350.0
+
+const _JUMP_APEX_THRESHOLD := 75.0
+const _JUMP_APEX_SPEED_FACTOR := 1.5
+const _JUMP_APEX_GRAVITY_FACTOR := 0.4
+const _JUMP_BRAKE_FACTOR := 0.5
+const _JUMP_FALL_GRAVITY_FACTOR := 1.75
+const _COYOTE_TIME := 0.1
+const _JUMP_BUFFER_TIME := 0.1
+const _SPRITE_STRETCH_SCALE_MIN := Vector2(1.0, 1.0)
+const _SPRITE_STRETCH_SCALE_MAX := Vector2(0.75, 1.25)
+const _SPRITE_SQUASH_SCALE_MIN := Vector2(1.25, 0.75)
+const _SPRITE_SQUASH_SCALE_MAX := Vector2(1.5, 0.5)
 
 var backup_position := Vector2.ZERO
 var direction := 1:
@@ -16,6 +29,10 @@ var direction := 1:
 		direction = value;
 		direction_changed.emit()
 		animated_sprite.flip_h = value == -1
+
+var _was_on_floor := false
+var _coyote_clock := 0.0
+var _jump_buffer_clock := 0.0
 
 @onready var hitbox: Area2D = $Hitbox
 @onready var state_machine: StateMachine = $StateMachine
@@ -27,8 +44,66 @@ func _ready() -> void:
 	Global.player = self
 	state_machine.start()
 
-func _physics_process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_coyote_clock -= delta; _jump_buffer_clock -= delta
+
+func _physics_process(delta: float) -> void:
+	var old_velocity_y := velocity.y
+
 	move_and_slide()
+
+	# It creates a stretch and squash effect on the player based on velocity.
+	if not is_on_floor():
+		# Stretch effect when the player is on air.
+		animated_sprite.scale.x = remap(abs(velocity.y), 0.0, MAX_GRAVITY,
+			_SPRITE_STRETCH_SCALE_MIN.x, _SPRITE_STRETCH_SCALE_MAX.x)
+		animated_sprite.scale.y = remap(abs(velocity.y), 0.0, MAX_GRAVITY,
+			_SPRITE_STRETCH_SCALE_MIN.y, _SPRITE_STRETCH_SCALE_MAX.y)
+
+		_was_on_floor = false
+	elif not _was_on_floor:
+		# Squash effect occurs when the player has just collided with the ground.
+		animated_sprite.scale.x = remap(abs(old_velocity_y), 0.0, MAX_GRAVITY,
+			_SPRITE_SQUASH_SCALE_MIN.x, _SPRITE_SQUASH_SCALE_MAX.x)
+		animated_sprite.scale.y = remap(abs(old_velocity_y), 0.0, MAX_GRAVITY,
+			_SPRITE_SQUASH_SCALE_MIN.y, _SPRITE_SQUASH_SCALE_MAX.y)
+
+		_was_on_floor = true
+
+	# Casic reading for the scale to return to the base scale.
+	animated_sprite.scale = animated_sprite.scale.lerp(Vector2.ONE, 1.0 - pow(0.001, delta))
+
+func get_sprite_center() -> Vector2:
+	return global_position + animated_sprite.offset
+
+func _movement_system(delta: float) -> void:
+	var speed := SPEED
+
+	if is_on_floor():
+		# Reset the coyote time.
+		_coyote_clock = _COYOTE_TIME
+	else:
+		var gravity: float = ProjectSettings.get_setting(&"physics/2d/default_gravity")
+
+		# When the player is at the peak of the jump.
+		if abs(velocity.y) < _JUMP_APEX_THRESHOLD:
+			speed *= _JUMP_APEX_SPEED_FACTOR
+			gravity *= _JUMP_APEX_GRAVITY_FACTOR
+
+		# It makes the player fall faster.
+		if not Input.is_action_pressed(&"jump"):
+			gravity *= _JUMP_FALL_GRAVITY_FACTOR
+
+		# Set a minimum and maximum limit for the gravity.
+		velocity.y = clamp(velocity.y + gravity * delta, -MAX_GRAVITY, MAX_GRAVITY)
+
+	# Reset the jump buffer.
+	if Input.is_action_just_pressed(&"jump"):
+		_jump_buffer_clock = _JUMP_BUFFER_TIME
+
+	var movement := _get_movement_input()
+	if movement != 0: direction = movement
+	velocity.x = lerp(velocity.x, movement * speed, 1.0 - pow(0.0001, delta))
 
 func _get_movement_input() -> int:
 	return Input.get_axis(&"move_left", &"move_right") as int
@@ -40,16 +115,7 @@ func _is_falling() -> bool:
 	return velocity.y > 0
 
 func _can_jump() -> bool:
-	return Input.is_action_just_pressed(&"jump")
-
-func _movement_system(delta: float) -> void:
-	var movement := _get_movement_input()
-	velocity.x = lerp(velocity.x, movement * SPEED, 10.0 * delta)
-
-	if movement != 0: direction = movement
-
-	if not is_on_floor():
-		velocity.y += ProjectSettings.get_setting(&"physics/2d/default_gravity") as float * delta
+	return _coyote_clock > 0 and _jump_buffer_clock > 0
 
 func _on_reality_changed() -> void:
 	var query := PhysicsShapeQueryParameters2D.new()
@@ -109,8 +175,16 @@ func _on_jump_state_entered() -> void:
 	animated_sprite.play(&"jump")
 	velocity.y = -JUMP_FORCE
 
+	# It slows down the player if they are no longer pressing the jump button.
+	if not Input.is_action_pressed(&"jump"):
+		velocity.y *= _JUMP_BRAKE_FACTOR
+
 func _on_jump_state_physics_processed(delta: float) -> void:
 	_movement_system(delta)
+
+	# It slows the player down when the jump button is released.
+	if Input.is_action_just_released(&"jump"):
+		velocity.y *= _JUMP_BRAKE_FACTOR
 
 	if is_on_floor(): state_machine.request_state(&"run" if _is_moving() else &"idle")
 	if _is_falling(): state_machine.request_state(&"fall")
@@ -122,5 +196,6 @@ func _on_fall_state_physics_processed(delta: float) -> void:
 	_movement_system(delta)
 
 	if is_on_floor(): state_machine.request_state(&"run" if _is_moving() else &"idle")
+	if _can_jump(): state_machine.request_state(&"jump")
 
 #endregion

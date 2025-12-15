@@ -6,14 +6,16 @@ var following := true
 
 func _ready() -> void:
 	Global.player_initialized.connect(_on_player_initialized); _on_player_initialized()
-	_update_global_transform()
+	_update_animated_sprite()
 
 func _process(_delta: float) -> void:
-	_update_global_transform()
+	_update_animated_sprite()
 
-func _update_global_transform() -> void:
-	if following and is_instance_valid(Global.player):
-		_animated_sprite.global_transform = Global.player.animated_sprite.global_transform
+func _update_animated_sprite() -> void:
+	if is_instance_valid(Global.player):
+		if following:
+			_animated_sprite.global_transform = Global.player.animated_sprite.global_transform
+		_animated_sprite.offset = Global.player.animated_sprite.offset
 
 func _on_player_initialized() -> void:
 	if not is_instance_valid(Global.player): return
