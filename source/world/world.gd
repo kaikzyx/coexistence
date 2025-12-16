@@ -30,7 +30,7 @@ func _ready() -> void:
 	_update_player_and_player_ghost_state()
 
 func _setup_player_and_player_ghost() -> void:
-	var is_light := RealityManager.is_light_reality
+	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
 
 	# Player setup.
 	var player: Player = _player_scene.instantiate()
@@ -52,7 +52,8 @@ func _swap_player_with_player_ghost() -> void:
 
 func _set_follow_behavior(enable: bool) -> void:
 	if is_instance_valid(_player_ghost): _player_ghost.following = enable
-	(_light_camera if RealityManager.is_light_reality else _dark_camera).activated = enable
+	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
+	(_light_camera if is_light else _dark_camera).activated = enable
 
 func _update_player_and_player_ghost_state() -> void:
 	if is_instance_valid(Global.player): _swap_player_with_player_ghost()

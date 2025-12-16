@@ -35,7 +35,8 @@ func _on_player_direction_changed() -> void:
 	_animated_sprite.flip_h = Global.player.direction == -1
 
 func _on_player_sprite_frames_changed() -> void:
-	_animated_sprite.sprite_frames = Player.get_sprite_frames(not RealityManager.is_light_reality)
+	_animated_sprite.sprite_frames = Player.get_sprite_frames(
+		RealityManager.get_opposite_reality(RealityManager.current_reality))
 
 func _on_player_animation_changed() -> void:
 	_animated_sprite.animation = Global.player.animated_sprite.animation

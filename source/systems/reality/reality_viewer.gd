@@ -45,9 +45,11 @@ func _calculate_mask_scale() -> Vector2:
 	return Vector2.ONE * (distance * 2 / _sprite_mask.texture.get_width())
 
 func _update_mask() -> void:
+	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
+
 	_sprite_mask.global_position = _calculate_mask_position()
-	_sprite_mask.modulate = Color.WHITE if RealityManager.is_light_reality else Color.BLACK
-	_background_mask.color = Color.BLACK if RealityManager.is_light_reality else Color.WHITE
+	_sprite_mask.modulate = Color.WHITE if is_light else Color.BLACK
+	_background_mask.color = Color.BLACK if is_light else Color.WHITE
 
 func _on_reality_changed() -> void:
 	RealityManager.reality_mask_start()

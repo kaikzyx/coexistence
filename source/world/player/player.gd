@@ -1,6 +1,7 @@
 class_name Player extends CharacterBody2D
 
-static func get_sprite_frames(is_light: bool) -> SpriteFrames:
+static func get_sprite_frames(reality_type: RealityManager.Type) -> SpriteFrames:
+	var is_light := reality_type == RealityManager.Type.LIGHT
 	if is_light: return preload("res://assets/player/light_player_animation.tres")
 	else: return preload("res://assets/player/dark_player_animation.tres")
 
@@ -110,7 +111,7 @@ func _dust_particle_effect(dust_direction: DustParticleEffect.Direction) -> void
 	var dust := DustParticleEffect.spawn()
 	dust.global_position = global_position
 	dust.direction = dust_direction
-	dust.reality_type = RealityManager.Type.LIGHT if RealityManager.is_light_reality else RealityManager.Type.DARK
+	dust.reality_type = RealityManager.current_reality
 	get_viewport().add_child(dust)
 
 func _get_movement_input() -> int:
@@ -150,7 +151,7 @@ func _on_reality_changed() -> void:
 	var current_frame := animated_sprite.frame
 	var current_progress := animated_sprite.frame_progress
 
-	animated_sprite.sprite_frames = get_sprite_frames(RealityManager.is_light_reality)
+	animated_sprite.sprite_frames = get_sprite_frames(RealityManager.current_reality)
 	animated_sprite.play(current_animation)
 	animated_sprite.set_frame_and_progress(current_frame, current_progress)
 
