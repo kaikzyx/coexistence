@@ -7,7 +7,7 @@ static func get_sprite_frames(is_light: bool) -> SpriteFrames:
 signal back_to_backup_position(from: Vector2, to: Vector2)
 signal direction_changed()
 
-const SPEED := 100.0
+const SPEED := 125.0
 const JUMP_FORCE := 300.0
 const MAX_GRAVITY := 350.0
 
