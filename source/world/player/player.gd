@@ -69,6 +69,7 @@ func _physics_process(delta: float) -> void:
 			_SPRITE_SQUASH_SCALE_MIN.y, _SPRITE_SQUASH_SCALE_MAX.y)
 
 		_was_on_floor = true
+		_dust_particle_effect(DustParticleEffect.Direction.DOWN)
 
 	# Casic reading for the scale to return to the base scale.
 	animated_sprite.scale = animated_sprite.scale.lerp(Vector2.ONE, 1.0 - pow(0.001, delta))
@@ -104,6 +105,13 @@ func _movement_system(delta: float) -> void:
 	var movement := _get_movement_input()
 	if movement != 0: direction = movement
 	velocity.x = lerp(velocity.x, movement * speed, 1.0 - pow(0.0001, delta))
+
+func _dust_particle_effect(dust_direction: DustParticleEffect.Direction) -> void:
+	var dust := DustParticleEffect.spawn()
+	dust.global_position = global_position
+	dust.direction = dust_direction
+	dust.reality_type = RealityManager.Type.LIGHT if RealityManager.is_light_reality else RealityManager.Type.DARK
+	get_viewport().add_child(dust)
 
 func _get_movement_input() -> int:
 	return Input.get_axis(&"move_left", &"move_right") as int
@@ -178,6 +186,13 @@ func _on_jump_state_entered() -> void:
 	# It slows down the player if they are no longer pressing the jump button.
 	if not Input.is_action_pressed(&"jump"):
 		velocity.y *= _JUMP_BRAKE_FACTOR
+
+	# Spawn dust based on the player's current direction.
+	if _is_moving():
+		_dust_particle_effect(
+			DustParticleEffect.Direction.RIGHT if direction == 1 else DustParticleEffect.Direction.LEFT)
+	else:
+		_dust_particle_effect(DustParticleEffect.Direction.UP)
 
 func _on_jump_state_physics_processed(delta: float) -> void:
 	_movement_system(delta)
