@@ -1,9 +1,14 @@
 # RealityManager autoload.
 extends Node
 
+enum Type { LIGHT, DARK }
+
 signal reality_changed()
 signal reality_mask_started()
 signal reality_mask_finished()
+
+const LIGHT_COLOR := Color(&"#ededed")
+const DARK_COLOR := Color(&"#111111")
 
 var is_light_reality := false:
 	set(value): is_light_reality = value; reality_changed.emit()

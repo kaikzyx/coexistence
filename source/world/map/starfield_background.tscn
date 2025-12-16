@@ -157,4 +157,5 @@ repeat_size = Vector2(320, 180)
 
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="PixelArtParallax"]
 sprite_frames = SubResource("SpriteFrames_wfv8f")
+animation = &"light"
 centered = false

@@ -15,7 +15,7 @@ texture_filter = 1
 [node name="Background" type="Node2D" parent="."]
 
 [node name="StarfieldBackground" parent="Background" instance=ExtResource("1_en7n0")]
-_reality = 1
+_reality_type = 1
 
 [node name="MoonParallax" type="Parallax2D" parent="Background"]
 scroll_scale = Vector2(0.01, 0.01)
