@@ -1,6 +1,6 @@
 class_name PlayerGhost extends Node2D
 
-var following := true
+var freeze := false
 
 @onready var _animated_sprite: AnimatedSprite2D = $AnimatedSprite
 
@@ -12,10 +12,9 @@ func _process(_delta: float) -> void:
 	_update_animated_sprite()
 
 func _update_animated_sprite() -> void:
-	if is_instance_valid(Global.player):
-		if following:
-			_animated_sprite.global_transform = Global.player.animated_sprite.global_transform
-		_animated_sprite.offset = Global.player.animated_sprite.offset
+	if freeze or not is_instance_valid(Global.player): return
+	_animated_sprite.global_transform = Global.player.animated_sprite.global_transform
+	_animated_sprite.offset = Global.player.animated_sprite.offset
 
 func _on_player_initialized() -> void:
 	if not is_instance_valid(Global.player): return
@@ -32,6 +31,7 @@ func _on_player_initialized() -> void:
 	_on_player_frame_changed()
 
 func _on_player_direction_changed() -> void:
+	if freeze: return
 	_animated_sprite.flip_h = Global.player.direction == -1
 
 func _on_player_sprite_frames_changed() -> void:
@@ -39,7 +39,9 @@ func _on_player_sprite_frames_changed() -> void:
 		RealityManager.get_opposite_reality(RealityManager.current_reality))
 
 func _on_player_animation_changed() -> void:
+	if freeze: return
 	_animated_sprite.animation = Global.player.animated_sprite.animation
 
 func _on_player_frame_changed() -> void:
+	if freeze: return
 	_animated_sprite.frame = Global.player.animated_sprite.frame

@@ -51,7 +51,7 @@ func _swap_player_with_player_ghost() -> void:
 	player_ghost_parent.remove_child(_player_ghost); player_parent.add_child(_player_ghost)
 
 func _set_follow_behavior(enable: bool) -> void:
-	if is_instance_valid(_player_ghost): _player_ghost.following = enable
+	if is_instance_valid(_player_ghost): _player_ghost.freeze = not enable
 	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
 	(_light_camera if is_light else _dark_camera).activated = enable
 
