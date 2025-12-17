@@ -7,19 +7,27 @@ const _AUTO_SCROLL_FACTOR := 0.1
 	set(value):
 		_reality_type = value
 
-		if Engine.is_editor_hint() or not is_instance_valid(_base): return
+		if not is_instance_valid(_base): return
 
 		match value:
 			RealityManager.Type.LIGHT:
 				_base.material.set_shader_parameter(&"background_color", RealityManager.LIGHT_COLOR)
 				_base.material.set_shader_parameter(&"stars_color", RealityManager.DARK_COLOR)
-				_pixel_art_parallax.autoscroll.y = -100 * _AUTO_SCROLL_FACTOR
-				_animated_sprite.play(&"light")
+
+				if Engine.is_editor_hint():
+					_animated_sprite.animation = &"light"
+				else:
+					_animated_sprite.play(&"light")
+					_pixel_art_parallax.autoscroll.y = -100 * _AUTO_SCROLL_FACTOR
 			RealityManager.Type.DARK:
 				_base.material.set_shader_parameter(&"background_color", RealityManager.DARK_COLOR)
 				_base.material.set_shader_parameter(&"stars_color", RealityManager.LIGHT_COLOR)
-				_pixel_art_parallax.autoscroll.y = 0
-				_animated_sprite.play(&"dark")
+
+				if Engine.is_editor_hint():
+					_animated_sprite.animation = &"dark"
+				else:
+					_animated_sprite.play(&"dark")
+					_pixel_art_parallax.autoscroll.y = 0
 
 @onready var _base: ColorRect = $ShaderParallax/Base
 @onready var _pixel_art_parallax: Parallax2D = $PixelArtParallax
