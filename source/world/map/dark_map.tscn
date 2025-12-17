@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=4 uid="uid://eui2pkrl4du8"]
+[gd_scene load_steps=8 format=4 uid="uid://eui2pkrl4du8"]
 
 [ext_resource type="Script" uid="uid://brvrxujjhq7pr" path="res://source/world/map/tile_map_reality_converter.gd" id="1_5eocy"]
 [ext_resource type="PackedScene" uid="uid://dgdihehpswbbi" path="res://source/world/map/starfield_background.tscn" id="1_en7n0"]
 [ext_resource type="Texture2D" uid="uid://b0biq2r7amsvh" path="res://assets/map/backgrounds/dark_moon_background.png" id="3_3sxl6"]
 [ext_resource type="Texture2D" uid="uid://cnmmq1dcxa2hh" path="res://assets/map/backgrounds/dark_clouds_background.png" id="3_en7n0"]
 [ext_resource type="TileSet" uid="uid://713ks60lrft7" path="res://assets/map/tile_set.tres" id="4_e6ov3"]
+[ext_resource type="PackedScene" uid="uid://dwjsstvbs7p2f" path="res://source/world/player/player_spawn.tscn" id="6_3sxl6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_en7n0"]
 size = Vector2(16, 176)
@@ -53,5 +54,9 @@ collision_mask = 0
 position = Vector2(-8, 88)
 shape = SubResource("RectangleShape2D_en7n0")
 
-[node name="PlayerSpawn" type="Marker2D" parent="."]
+[node name="PlayerSpawn" parent="." instance=ExtResource("6_3sxl6")]
+
+[node name="SpawnPosition" parent="PlayerSpawn" index="0"]
 position = Vector2(48, 128)
+
+[editable path="PlayerSpawn"]

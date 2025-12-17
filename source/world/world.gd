@@ -4,8 +4,8 @@ static var _player_scene: PackedScene = preload("res://source/world/player/playe
 static var _player_ghost_scene: PackedScene = preload("res://source/world/player/player_ghost.tscn")
 
 var _player_ghost: PlayerGhost = null
-var _light_player_spawn: Marker2D = null
-var _dark_player_spawn: Marker2D = null
+var _light_player_spawn: PlayerSpawn = null
+var _dark_player_spawn: PlayerSpawn = null
 
 @onready var _light_camera: CameraFollower = $DarkViewport/CameraFollower
 @onready var _dark_camera: CameraFollower = $LightViewport/CameraFollower
@@ -31,14 +31,18 @@ func _ready() -> void:
 
 func _setup_player_and_player_ghost() -> void:
 	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
+	var player_spawn := _light_player_spawn if is_light else _dark_player_spawn
+	var player_spawn_position := player_spawn.get_spawn_position()
 
 	# Player setup.
 	var player: Player = _player_scene.instantiate()
 	player.back_to_backup_position.connect(_on_player_back_to_backup_position)
-	(_light_player_spawn if is_light else _dark_player_spawn).add_child(player)
+	player.global_position = player_spawn_position
+	player_spawn.add_child(player)
 
 	# Player ghost setup.
 	_player_ghost = _player_ghost_scene.instantiate()
+	_player_ghost.global_position = player_spawn_position
 	(_dark_player_spawn if is_light else _light_player_spawn).add_child(_player_ghost)
 
 func _update_player_and_player_ghost_state() -> void:
