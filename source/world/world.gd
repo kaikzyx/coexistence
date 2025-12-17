@@ -35,28 +35,27 @@ func _setup_player_and_player_ghost() -> void:
 	# Player setup.
 	var player: Player = _player_scene.instantiate()
 	player.back_to_backup_position.connect(_on_player_back_to_backup_position)
-	(_dark_player_spawn if is_light else _light_player_spawn).add_child(player)
+	(_light_player_spawn if is_light else _dark_player_spawn).add_child(player)
 
 	# Player ghost setup.
 	_player_ghost = _player_ghost_scene.instantiate()
-	(_light_player_spawn if is_light else _dark_player_spawn).add_child(_player_ghost)
+	(_dark_player_spawn if is_light else _light_player_spawn).add_child(_player_ghost)
 
-func _swap_player_with_player_ghost() -> void:
+func _update_player_and_player_ghost_state() -> void:
 	if not is_instance_valid(Global.player) or not is_instance_valid(_player_ghost): return
 
-	var player_parent := Global.player.get_parent()
-	var player_ghost_parent := _player_ghost.get_parent()
+	Global.player.get_parent().remove_child(Global.player)
+	_player_ghost.get_parent().remove_child(_player_ghost)
 
-	player_parent.remove_child(Global.player); player_ghost_parent.add_child(Global.player)
-	player_ghost_parent.remove_child(_player_ghost); player_parent.add_child(_player_ghost)
+	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
+
+	(_light_player_spawn if is_light else _dark_player_spawn).add_child(Global.player)
+	(_dark_player_spawn if is_light else _light_player_spawn).add_child(_player_ghost)
 
 func _set_follow_behavior(enable: bool) -> void:
 	if is_instance_valid(_player_ghost): _player_ghost.freeze = not enable
 	var is_light := RealityManager.current_reality == RealityManager.Type.LIGHT
 	(_light_camera if is_light else _dark_camera).activated = enable
-
-func _update_player_and_player_ghost_state() -> void:
-	if is_instance_valid(Global.player): _swap_player_with_player_ghost()
 
 func _on_viewport_size_changed() -> void:
 	var size := get_viewport_rect().size
