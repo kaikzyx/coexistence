@@ -21,12 +21,12 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_instance_valid(Global.player):
-		_target = Global.player.global_position
+		_target = Global.player.get_sprite_center()
 		if _can_follow_target: global_position = global_position.lerp(_target, 10.0 * delta)
 
 func _on_player_initialized() -> void:
 	Global.player.back_to_backup_position.connect(_on_player_back_to_backup_position)
-	_target = Global.player.global_position
+	_target = Global.player.get_sprite_center()
 	global_position = _target
 
 func _on_player_back_to_backup_position(from: Vector2, to: Vector2) -> void:
